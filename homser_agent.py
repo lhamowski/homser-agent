@@ -19,9 +19,10 @@ app = Flask(__name__)
 def turn_off():
     try:
         def shutdown():
-            time.sleep(2)
+            time.sleep(1)
             os.system('sudo shutdown now')
 
+        sio.disconnect()
         threading.Thread(target=shutdown).start()
         return 'Turned off successfully', 200
     except Exception as e:
