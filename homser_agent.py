@@ -30,10 +30,10 @@ def turn_off():
 def send_info():
     try:
         cpu_usage = psutil.cpu_percent()
-        cpu_temp = psutil.sensors_temperatures()['coretemp'][0].current
+        cpu_temp = round(psutil.sensors_temperatures()['k10temp'][0].current)
 
         ram = psutil.virtual_memory()
-        ram_usage = f"{ram.used / (1024**3):.2f}/{ram.total / (1024**3):.2f}"
+        ram_usage = f"{round(ram.used / (1024**3), 1):.1f}/{round(ram.total / (1024**3), 1):.1f}"
 
         agent_id = config['agent_id']
 
