@@ -18,7 +18,11 @@ app = Flask(__name__)
 @app.route('/turn-off', methods=['PUT'])
 def turn_off():
     try:
-        os.system('sudo shutdown now')
+        def shutdown():
+            time.sleep(2)
+            os.system('sudo shutdown now')
+
+        threading.Thread(target=shutdown).start()
         return 'Turned off successfully', 200
     except Exception as e:
         return f'Error turning off: {str(e)}', 500
