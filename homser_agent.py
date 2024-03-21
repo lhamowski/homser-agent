@@ -1,10 +1,10 @@
+import logging
 import os
-import time
-import yaml
 import psutil
 import socketio
-import logging
 import threading
+import time
+import yaml
 
 from flask import Flask, request
 
@@ -12,18 +12,23 @@ with open('config.yaml') as f:
     config = yaml.safe_load(f)
 
 sio = socketio.Client()
-
 app = Flask(__name__)
+
+turn_off_executed = False
 
 @app.route('/turn-off', methods=['PUT'])
 def turn_off():
+    global turn_off_executed
+    if turn_off_executed:
+        return 'Turn off already executed', 400
+
     try:
         def shutdown():
             time.sleep(1)
             os.system('sudo shutdown now')
 
-        sio.disconnect()
         threading.Thread(target=shutdown).start()
+        turn_off_executed = True
         return 'Turned off successfully', 200
     except Exception as e:
         return f'Error turning off: {str(e)}', 500
